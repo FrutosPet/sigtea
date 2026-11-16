@@ -1,0 +1,11 @@
+type: object
+description: Ocupação da CBO (Classificação Brasileira de Ocupações). Tabela de referência, somente leitura.
+required: [codigo, titulo]
+properties:
+  codigo:
+    type: string
+    pattern: '^[0-9]{6}$'   # exatamente 6 números
+    example: '223505'
+  titulo:
+    type: string
+    example: Enfermeiro

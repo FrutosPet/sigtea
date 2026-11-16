@@ -1,0 +1,135 @@
+# T3 – Rotas das tabelas de referência (HU24 · RF22)
+# Todas são somente de leitura (só GET). Os nomes das chaves abaixo (cbo, municipios, cid)
+# são os que o openapi.yaml da T1 precisa apontar, ex.:
+#   /referencias/cbo:
+#     $ref: './paths/referencias.yaml#/cbo'
+
+cbo:
+  get:
+    tags: [Referências]
+    summary: Buscar ocupações da CBO
+    description: HU24 · RF22. Busca por código ou título. Tabela oficial, somente leitura.
+    operationId: listarCbo
+    parameters:
+      - $ref: '../components/parametros.yaml#/pagina'
+      - $ref: '../components/parametros.yaml#/tamanho_pagina'
+      - $ref: '../components/parametros.yaml#/busca'
+    responses:
+      '200':
+        description: Lista paginada de ocupações da CBO.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dados:
+                  type: array
+                  items:
+                    $ref: '../components/schemas/cbo.yaml'
+                paginacao:
+                  $ref: '../components/schemas/paginacao.yaml'
+            example:
+              dados:
+                - codigo: '223505'
+                  titulo: Enfermeiro
+              paginacao:
+                pagina: 1
+                tamanho_pagina: 20
+                total_registros: 1
+                total_paginas: 1
+      '401':
+        $ref: '../components/respostas.yaml#/NaoAutenticado'
+      '422':
+        $ref: '../components/respostas.yaml#/DadosInvalidos'
+
+municipios:
+  get:
+    tags: [Referências]
+    summary: Buscar municípios
+    description: HU24 · RF22. Busca por nome, com filtro opcional por UF. Tabela do IBGE, somente leitura.
+    operationId: listarMunicipios
+    parameters:
+      - $ref: '../components/parametros.yaml#/pagina'
+      - $ref: '../components/parametros.yaml#/tamanho_pagina'
+      - $ref: '../components/parametros.yaml#/busca'
+      - name: uf
+        in: query
+        description: 'Sigla da UF para filtrar os municípios (ex.: GO).'
+        required: false
+        schema:
+          type: string
+          pattern: '^[A-Z]{2}$'
+          example: GO
+    responses:
+      '200':
+        description: Lista paginada de municípios.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dados:
+                  type: array
+                  items:
+                    $ref: '../components/schemas/municipio.yaml'
+                paginacao:
+                  $ref: '../components/schemas/paginacao.yaml'
+            example:
+              dados:
+                - codigo_ibge: '5208707'
+                  nome: Goiânia
+                  uf: GO
+              paginacao:
+                pagina: 1
+                tamanho_pagina: 20
+                total_registros: 1
+                total_paginas: 1
+      '401':
+        $ref: '../components/respostas.yaml#/NaoAutenticado'
+      '422':
+        $ref: '../components/respostas.yaml#/DadosInvalidos'
+
+cid:
+  get:
+    tags: [Referências]
+    summary: Buscar códigos da CID-10
+    description: HU24 · RF22. Busca por código (com ou sem ponto) ou descrição. Tabela oficial, somente leitura.
+    operationId: listarCid
+    parameters:
+      - $ref: '../components/parametros.yaml#/pagina'
+      - $ref: '../components/parametros.yaml#/tamanho_pagina'
+      - name: busca
+        in: query
+        description: Texto da busca. O código pode ser informado com ou sem ponto (F84.0 ou F840).
+        required: false
+        schema:
+          type: string
+          example: F84.0
+    responses:
+      '200':
+        description: Lista paginada de códigos da CID-10. O campo codigo sempre vem sem ponto.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dados:
+                  type: array
+                  items:
+                    $ref: '../components/schemas/cid.yaml'
+                paginacao:
+                  $ref: '../components/schemas/paginacao.yaml'
+            example:
+              dados:
+                - codigo: F840
+                  descricao: Autismo infantil
+                  tipo: subcategoria
+              paginacao:
+                pagina: 1
+                tamanho_pagina: 20
+                total_registros: 1
+                total_paginas: 1
+      '401':
+        $ref: '../components/respostas.yaml#/NaoAutenticado'
+      '422':
+        $ref: '../components/respostas.yaml#/DadosInvalidos'

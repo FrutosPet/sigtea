@@ -1,0 +1,17 @@
+type: object
+description: Código da CID-10. Tabela de referência, somente leitura.
+required: [codigo, descricao, tipo]
+properties:
+  codigo:
+    type: string
+    description: Código sem ponto (o ponto é só de exibição).
+    pattern: '^[A-Z][0-9]{2,3}$'
+    example: F840
+  descricao:
+    type: string
+    example: Autismo infantil
+  tipo:
+    type: string
+    description: 'Categoria (3 caracteres, ex.: F84) ou subcategoria (4 caracteres, ex.: F840).'
+    enum: [categoria, subcategoria]
+    example: subcategoria

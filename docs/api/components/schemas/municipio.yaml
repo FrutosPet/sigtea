@@ -1,0 +1,15 @@
+type: object
+description: Município da tabela do IBGE. Tabela de referência, somente leitura.
+required: [codigo_ibge, nome, uf]
+properties:
+  codigo_ibge:
+    type: string
+    pattern: '^[0-9]{7}$'   # exatamente 7 números
+    example: '5208707'
+  nome:
+    type: string
+    example: Goiânia
+  uf:
+    type: string
+    pattern: '^[A-Z]{2}$'   # sigla com 2 letras maiúsculas
+    example: GO
