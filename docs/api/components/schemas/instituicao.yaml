@@ -1,0 +1,77 @@
+type: object
+required:
+  - nome
+  - cnpj
+  - logradouro
+  - numero
+  - bairro
+  - municipio_ibge
+properties:
+  id:
+    type: string
+    format: uuid
+    readOnly: true
+    example: '3fa85f64-5717-4562-b3fc-2c963f66afa6'
+  nome:
+    type: string
+    maxLength: 150
+    example: 'Centro de Atendimento TEA Cerrado'
+  cnpj:
+    type: string
+    pattern: '^[0-9]{14}$'
+    description: '14 números, sem pontos. Dígitos verificadores conferidos pela API.'
+    example: '11222333000181'
+  tipo_instituicao:
+    type: string
+    enum:
+      - associacao
+      - empresa_individual
+      - empresa_limitada
+      - microempreendedor_individual
+      - municipal
+    example: 'associacao'
+  telefone:
+    type: string
+    pattern: '^[0-9]{10,11}$'
+    description: '10 ou 11 números, sem máscara.'
+    example: '64999990000'
+  email:
+    type: string
+    format: email
+    example: 'contato@centrotea.org.br'
+  logradouro:
+    type: string
+    example: 'Avenida Principal'
+  numero:
+    type: string
+    description: 'Aceita "S/N".'
+    example: '120'
+  complemento:
+    type: string
+    example: 'Sala 2'
+  bairro:
+    type: string
+    example: 'Centro'
+  municipio_ibge:
+    type: string
+    pattern: '^[0-9]{7}$'
+    description: '7 números; precisa existir na tabela de municípios.'
+    example: '5209101'
+  uf:
+    type: string
+    readOnly: true
+    example: 'GO'
+  municipio_nome:
+    type: string
+    readOnly: true
+    example: 'Goiatuba'
+  criado_em:
+    type: string
+    format: date-time
+    readOnly: true
+    example: '2026-11-10T14:30:00Z'
+  atualizado_em:
+    type: string
+    format: date-time
+    readOnly: true
+    example: '2026-11-10T14:30:00Z'

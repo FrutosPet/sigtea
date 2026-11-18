@@ -1,0 +1,60 @@
+type: object
+required:
+  - nome
+  - cnes
+properties:
+  id:
+    type: string
+    format: uuid
+    readOnly: true
+    example: '8f1c9a20-4b1e-4d2c-9a3f-123456789abc'
+  nome:
+    type: string
+    maxLength: 150
+    description: 'Até 150 caracteres; não se repete na instituição.'
+    example: 'Unidade Sede'
+  cnes:
+    type: string
+    pattern: '^[0-9]{7}$'
+    description: 'Exatamente 7 números; único.'
+    example: '9999991'
+  telefone:
+    type: string
+    pattern: '^[0-9]{10,11}$'
+    example: '6434950000'
+  logradouro:
+    type: string
+    description: 'Se vazio, a tela mostra o da instituição.'
+    example: 'Rua das Flores'
+  numero:
+    type: string
+    example: '45'
+  complemento:
+    type: string
+    example: 'Bloco B'
+  bairro:
+    type: string
+    example: 'Setor Sul'
+  cep:
+    type: string
+    pattern: '^[0-9]{8}$'
+    example: '75600000'
+  municipio_ibge:
+    type: string
+    pattern: '^[0-9]{7}$'
+    example: '5209101'
+  ativo:
+    type: boolean
+    readOnly: true
+    description: 'Alterado apenas pela rota PATCH /unidades/{id}/situacao.'
+    example: true
+  criado_em:
+    type: string
+    format: date-time
+    readOnly: true
+    example: '2026-11-10T15:00:00Z'
+  atualizado_em:
+    type: string
+    format: date-time
+    readOnly: true
+    example: '2026-11-10T15:00:00Z'

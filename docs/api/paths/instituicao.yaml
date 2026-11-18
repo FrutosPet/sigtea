@@ -1,0 +1,56 @@
+instituicao:
+  get:
+    tags: [Instituição]
+    summary: Detalhar dados da instituição
+    description: HU17 · RF14. Retorna os dados da instituição vinculada ao token do usuário.
+    operationId: detalharInstituicao
+    responses:
+      '200':
+        description: Dados da instituição encontrados.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/instituicao.yaml'
+      '401':
+        $ref: '../components/respostas.yaml#/NaoAutenticado'
+      '404':
+        $ref: '../components/respostas.yaml#/NaoEncontrado'
+
+  put:
+    tags: [Instituição]
+    summary: Atualizar dados da instituição
+    description: HU17 · RF14. Atualiza os dados da instituição. Permitido apenas para perfil Administrador.
+    operationId: atualizarInstituicao
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/instituicao.yaml'
+    responses:
+      '200':
+        description: Dados da instituição atualizados com sucesso.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/instituicao.yaml'
+      '401':
+        $ref: '../components/respostas.yaml#/NaoAutenticado'
+      '403':
+        $ref: '../components/respostas.yaml#/AcessoNegado'
+      '422':
+        description: Dados inválidos (ex. CNPJ inválido ou município inexistente).
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/erro.yaml'
+            examples:
+              cnpj_invalido:
+                summary: CNPJ inválido
+                value:
+                  status: 422
+                  code: CNPJ_INVALIDO
+                  message: CNPJ inválido.
+                  details:
+                    - campo: cnpj
+                      mensagem: CNPJ inválido.

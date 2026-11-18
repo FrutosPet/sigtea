@@ -1,0 +1,179 @@
+unidades:
+  get:
+    tags: [Unidades]
+    summary: Listar unidades de atendimento
+    description: HU18 · RF15 · RN30. Retorna só as unidades que o usuário pode ver.
+    operationId: listarUnidades
+    parameters:
+      - $ref: '../components/parametros.yaml#/pagina'
+      - $ref: '../components/parametros.yaml#/tamanho_pagina'
+      - $ref: '../components/parametros.yaml#/busca'
+      - name: ativo
+        in: query
+        description: Filtra por unidades ativas (true) ou inativas (false).
+        schema:
+          type: boolean
+    responses:
+      '200':
+        description: Lista paginada de unidades.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dados:
+                  type: array
+                  items:
+                    $ref: '../components/schemas/unidade.yaml'
+                paginacao:
+                  $ref: '../components/schemas/paginacao.yaml'
+      '401':
+        $ref: '../components/respostas.yaml#/NaoAutenticado'
+
+  post:
+    tags: [Unidades]
+    summary: Cadastrar unidade de atendimento
+    description: HU18 · RF15 · RN33. Cadastra uma nova unidade. Permitido apenas para Administrador.
+    operationId: cadastrarUnidade
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/unidade.yaml'
+    responses:
+      '201':
+        description: Unidade cadastrada com sucesso.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/unidade.yaml'
+      '401':
+        $ref: '../components/respostas.yaml#/NaoAutenticado'
+      '403':
+        $ref: '../components/respostas.yaml#/AcessoNegado'
+      '409':
+        description: Conflito de dados únicos (CNES ou nome já cadastrado).
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/erro.yaml'
+            examples:
+              cnes_duplicado:
+                summary: CNES já cadastrado
+                value:
+                  status: 409
+                  code: CNES_DUPLICADO
+                  message: Já existe unidade com este CNES.
+                  details:
+                    - campo: cnes
+                      mensagem: Já existe unidade com este CNES.
+              nome_duplicado:
+                summary: Nome já cadastrado na instituição
+                value:
+                  status: 409
+                  code: NOME_UNIDADE_DUPLICADO
+                  message: Já existe unidade com este nome na instituição.
+                  details:
+                    - campo: nome
+                      mensagem: Já existe unidade com este nome na instituição.
+      '422':
+        description: Dados inválidos (ex. CNES com formato incorreto).
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/erro.yaml'
+            example:
+              status: 422
+              code: DADOS_INVALIDOS
+              message: Verifique os campos informados.
+              details:
+                - campo: cnes
+                  mensagem: O CNES deve conter exatamente 7 números.
+
+unidade_por_id:
+  get:
+    tags: [Unidades]
+    summary: Detalhar unidade
+    description: HU18 · RF15. Retorna os dados de uma unidade específica. Retorna 404 se não pertencer ao usuário.
+    operationId: detalharUnidade
+    parameters:
+      - $ref: '../components/parametros.yaml#/id'
+    responses:
+      '200':
+        description: Unidade encontrada.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/unidade.yaml'
+      '401':
+        $ref: '../components/respostas.yaml#/NaoAutenticado'
+      '404':
+        $ref: '../components/respostas.yaml#/NaoEncontrado'
+
+  put:
+    tags: [Unidades]
+    summary: Editar unidade
+    description: HU18 · RF15 · RN33. Atualiza os dados de uma unidade. Permitido apenas para Administrador.
+    operationId: editarUnidade
+    parameters:
+      - $ref: '../components/parametros.yaml#/id'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/unidade.yaml'
+    responses:
+      '200':
+        description: Unidade atualizada com sucesso.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/unidade.yaml'
+      '401':
+        $ref: '../components/respostas.yaml#/NaoAutenticado'
+      '403':
+        $ref: '../components/respostas.yaml#/AcessoNegado'
+      '404':
+        $ref: '../components/respostas.yaml#/NaoEncontrado'
+      '409':
+        $ref: '../components/respostas.yaml#/Conflito'
+      '422':
+        $ref: '../components/respostas.yaml#/DadosInvalidos'
+
+unidade_situacao:
+  patch:
+    tags: [Unidades]
+    summary: Alterar situação da unidade (inativar ou reativar)
+    description: HU18 · RF15 · RN34. Inativa ou reativa uma unidade. Permitido apenas para Administrador.
+    operationId: alterarSituacaoUnidade
+    parameters:
+      - $ref: '../components/parametros.yaml#/id'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - ativo
+            properties:
+              ativo:
+                type: boolean
+                example: false
+    responses:
+      '200':
+        description: Situação da unidade alterada com sucesso.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/unidade.yaml'
+      '401':
+        $ref: '../components/respostas.yaml#/NaoAutenticado'
+      '403':
+        $ref: '../components/respostas.yaml#/AcessoNegado'
+      '404':
+        $ref: '../components/respostas.yaml#/NaoEncontrado'
+      '422':
+        $ref: '../components/respostas.yaml#/DadosInvalidos'
