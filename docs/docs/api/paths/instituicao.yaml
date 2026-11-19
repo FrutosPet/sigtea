@@ -1,0 +1,5 @@
+# T2 (feature/api-unidades) preenche este arquivo.
+# Rota: /instituicao
+# Lembrete HU27: instituicao_id nunca vem no corpo; a API usa o token.
+
+instituicao: {}

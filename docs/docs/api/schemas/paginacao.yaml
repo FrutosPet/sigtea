@@ -1,0 +1,32 @@
+type: object
+description: |
+  Metadados de paginação devolvidos em toda listagem.
+  Uma resposta paginada tem o formato:
+    { "dados": [ ... ], "paginacao": { ...este objeto... } }
+required:
+  - pagina
+  - tamanho_pagina
+  - total_itens
+  - total_paginas
+properties:
+  pagina:
+    type: integer
+    minimum: 1
+    description: Página devolvida (começa em 1).
+    example: 1
+  tamanho_pagina:
+    type: integer
+    minimum: 1
+    maximum: 100
+    description: Quantidade máxima de itens por página.
+    example: 20
+  total_itens:
+    type: integer
+    minimum: 0
+    description: Total de itens que atendem aos filtros, somando todas as páginas.
+    example: 57
+  total_paginas:
+    type: integer
+    minimum: 0
+    description: Total de páginas para o tamanho_pagina usado.
+    example: 3

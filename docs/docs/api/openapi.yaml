@@ -1,0 +1,93 @@
+openapi: 3.0.3
+info:
+  title: SIGTEA 2.0 - API
+  version: 1.0.0
+  description: |
+    Contrato da API do SIGTEA 2.0. Este arquivo é a fonte da verdade:
+    o backend implementa o que está aqui e o frontend consome o que está aqui.
+
+    Convenções:
+    - JSON em UTF-8, campos em snake_case e em português.
+    - Datas no formato ISO 8601 (AAAA-MM-DD). Data e hora em UTC.
+    - Toda rota exige `Authorization: Bearer <token>`, exceto as marcadas com `security: []`.
+    - Listagens são paginadas com `pagina` e `tamanho_pagina` e devolvem `dados` + `paginacao`.
+    - Todo erro segue o schema `Erro` (status, code, message, details).
+      Os valores de `code` estão no catálogo em `codigos-erro`.
+    - O `instituicao_id` nunca vem no corpo da requisição: a API o obtém do token (HU27).
+
+servers:
+  - url: /api/v1
+    description: Caminho base (o host depende do ambiente)
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Autenticação
+    description: Cadastro, login, renovação de token, logout e dados do usuário logado (T4)
+  - name: Instituição
+    description: Dados da instituição do usuário logado (T2)
+  - name: Unidades
+    description: Unidades de atendimento da instituição (T2)
+  - name: Referências
+    description: Tabelas de consulta somente leitura - CBO, municípios e CID-10 (T3)
+
+paths:
+  # ---------- T2 - Instituição e Unidades (feature/api-unidades) ----------
+  /instituicao:
+    $ref: './paths/instituicao.yaml#/instituicao'
+  /unidades:
+    $ref: './paths/unidades.yaml#/unidades'
+  /unidades/{unidade_id}:
+    $ref: './paths/unidades.yaml#/unidade_por_id'
+
+  # ---------- T3 - Tabelas de referência (feature/api-referencias) ----------
+  /referencias/cbo:
+    $ref: './paths/referencias.yaml#/cbo'
+  /referencias/municipios:
+    $ref: './paths/referencias.yaml#/municipios'
+  /referencias/cid10:
+    $ref: './paths/referencias.yaml#/cid10'
+
+  # ---------- T4 - Autenticação ----------
+  /auth/register:
+    $ref: './paths/autenticacao.yaml#/register'
+  /auth/login:
+    $ref: './paths/autenticacao.yaml#/login'
+  /auth/refresh:
+    $ref: './paths/autenticacao.yaml#/refresh'
+  /auth/logout:
+    $ref: './paths/autenticacao.yaml#/logout'
+  /auth/me:
+    $ref: './paths/autenticacao.yaml#/me'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    Pagina:
+      $ref: './parametros.yaml#/Pagina'
+    TamanhoPagina:
+      $ref: './parametros.yaml#/TamanhoPagina'
+
+  schemas:
+    Erro:
+      $ref: './schemas/erro.yaml'
+    Paginacao:
+      $ref: './schemas/paginacao.yaml'
+
+  responses:
+    NaoAutenticado:
+      $ref: './respostas.yaml#/NaoAutenticado'
+    AcessoNegado:
+      $ref: './respostas.yaml#/AcessoNegado'
+    NaoEncontrado:
+      $ref: './respostas.yaml#/NaoEncontrado'
+    Conflito:
+      $ref: './respostas.yaml#/Conflito'
+    DadosInvalidos:
+      $ref: './respostas.yaml#/DadosInvalidos'

@@ -1,0 +1,33 @@
+type: object
+description: |
+  Formato padrão de todo erro devolvido pela API.
+  Os quatro campos são obrigatórios em qualquer resposta de erro.
+required:
+  - status
+  - code
+  - message
+  - details
+properties:
+  status:
+    type: integer
+    description: Código HTTP da resposta (repetido no corpo para facilitar o frontend).
+    minimum: 400
+    maximum: 599
+    example: 422
+  code:
+    type: string
+    description: |
+      Código do erro, sempre em MAIÚSCULO e com sublinhado.
+      Os valores possíveis estão no catálogo `codigos-erro`.
+    pattern: '^[A-Z][A-Z0-9_]*$'
+    example: DADOS_INVALIDOS
+  message:
+    type: string
+    description: Mensagem amigável, pronta para ser exibida ao usuário.
+    example: Verifique os campos destacados e tente novamente.
+  details:
+    type: string
+    description: |
+      Mensagem técnica para o desenvolvedor.
+      Em produção não deve conter stack trace, SQL nem dados pessoais.
+    example: "O campo 'cnes' deve ter 7 dígitos."

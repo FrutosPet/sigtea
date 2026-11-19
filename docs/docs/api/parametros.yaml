@@ -1,0 +1,26 @@
+# Parâmetros de query reutilizáveis.
+# Uso em uma rota de listagem:
+#   parameters:
+#     - $ref: '../openapi.yaml#/components/parameters/Pagina'
+#     - $ref: '../openapi.yaml#/components/parameters/TamanhoPagina'
+
+Pagina:
+  name: pagina
+  in: query
+  required: false
+  description: Número da página, começando em 1.
+  schema:
+    type: integer
+    minimum: 1
+    default: 1
+
+TamanhoPagina:
+  name: tamanho_pagina
+  in: query
+  required: false
+  description: Itens por página. Valores acima de 100 são recusados com 422.
+  schema:
+    type: integer
+    minimum: 1
+    maximum: 100
+    default: 20

@@ -1,0 +1,75 @@
+# Respostas de erro padrão.
+# Uso em uma rota:
+#   responses:
+#     '401':
+#       $ref: '../openapi.yaml#/components/responses/NaoAutenticado'
+#
+# Os valores de "code" dos exemplos devem bater com o catálogo codigos-erro (T3).
+
+NaoAutenticado:
+  description: Token ausente, inválido ou expirado.
+  content:
+    application/json:
+      schema:
+        $ref: './schemas/erro.yaml'
+      examples:
+        token_expirado:
+          value:
+            status: 401
+            code: TOKEN_EXPIRADO
+            message: Sua sessão expirou. Faça login novamente.
+            details: O token JWT passou da data de expiração.
+        token_ausente:
+          value:
+            status: 401
+            code: TOKEN_AUSENTE
+            message: Faça login para continuar.
+            details: Cabeçalho Authorization não enviado.
+
+AcessoNegado:
+  description: Usuário autenticado, mas sem permissão para esta ação.
+  content:
+    application/json:
+      schema:
+        $ref: './schemas/erro.yaml'
+      example:
+        status: 403
+        code: ACESSO_NEGADO
+        message: Você não tem permissão para realizar esta ação.
+        details: O papel do usuário não permite acessar este recurso.
+
+NaoEncontrado:
+  description: O recurso não existe ou não pertence à instituição do usuário.
+  content:
+    application/json:
+      schema:
+        $ref: './schemas/erro.yaml'
+      example:
+        status: 404
+        code: RECURSO_NAO_ENCONTRADO
+        message: Registro não encontrado.
+        details: Nenhum registro com o id informado nesta instituição.
+
+Conflito:
+  description: A operação conflita com um dado que já existe (ex. CNES ou CPF duplicado).
+  content:
+    application/json:
+      schema:
+        $ref: './schemas/erro.yaml'
+      example:
+        status: 409
+        code: CNES_DUPLICADO
+        message: Já existe uma unidade cadastrada com este CNES.
+        details: Violação de unicidade no campo cnes.
+
+DadosInvalidos:
+  description: O corpo ou os parâmetros da requisição não passaram na validação.
+  content:
+    application/json:
+      schema:
+        $ref: './schemas/erro.yaml'
+      example:
+        status: 422
+        code: DADOS_INVALIDOS
+        message: Verifique os campos destacados e tente novamente.
+        details: "O campo 'municipio_ibge' deve ter 7 dígitos."

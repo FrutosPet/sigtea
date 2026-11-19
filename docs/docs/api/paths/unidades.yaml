@@ -1,0 +1,15 @@
+# T2 (feature/api-unidades) preenche este arquivo.
+# Rotas: /unidades e /unidades/{unidade_id}
+# Erros: ver cenários das HU17 e HU18 (ex. 409 CNES_DUPLICADO).
+
+unidades: {}
+
+unidade_por_id:
+  parameters:
+    - name: unidade_id
+      in: path
+      required: true
+      description: Identificador da unidade de atendimento.
+      schema:
+        type: string
+        format: uuid
